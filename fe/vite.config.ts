@@ -14,6 +14,11 @@ export default defineConfig(({ mode }) => {
     root: frontendRoot,
     envDir: workspaceRoot,
     base: env.VITE_PUBLIC_BASE_PATH || "/",
+    define: {
+      "import.meta.env.VITE_MAP_LOGIN_URL": JSON.stringify(
+        env.VITE_MAP_LOGIN_URL || "http://webgis.localhost/login"
+      )
+    },
     plugins: [react()],
     optimizeDeps: { exclude: ["maplibre-gl"] },
     server: {
