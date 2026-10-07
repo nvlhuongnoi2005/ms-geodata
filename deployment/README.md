@@ -1,0 +1,52 @@
+# Tile-server namespace
+
+`ms-geodata` uses a dedicated Kubernetes namespace named `tile-server`.
+
+- It will contain Geodata Admin, the Geodata API, GDAL workers and the tile gateway.
+- The existing `map` application remains in namespace `webgis` and remains the identity authority.
+- The frontend Service is intentionally internal. A later ingress change in `map` will expose it at `/geodata-admin` on the shared WebGIS origin so the existing `/auth` session flow is reused.
+
+The current local ingress exposes the frontend at `http://geodata.localhost`.
+It is intended for UI development. `webgis.localhost` and `geodata.localhost` have separate host-only browser cookies, so the current WebGIS refresh session is not shared automatically. Production admin access should use a shared origin such as `/geodata-admin`, or `db-auth` must be upgraded to an SSO/cross-subdomain session design.
+
+## Air-gapped deployment
+
+The application must not make Internet connections at runtime or deployment time.
+
+- Mirror all base and runtime images into `registry.internal` before applying manifests.
+- Build frontend images from `registry.internal/base/node:24-alpine` and `registry.internal/base/nginx:1.27-alpine`; these are the Dockerfile defaults.
+- Mirror the S3 bootstrap image as `registry.internal/platform/aws-cli:2.31.22`.
+- Configure npm to use the internal package mirror/cache before running `npm ci` in an offline build environment.
+- Configure the future API and worker NetworkPolicies with explicit egress only to internal DNS, WebGIS auth and the configured Ceph RGW endpoint. Never permit a catch-all Internet egress rule.
+- Map styles, glyphs, sprites, icons and basemap data must be stored and served internally; no external MapLibre style, font or tile URL is permitted.
+
+### Local Docker Desktop build
+
+The frontend Deployment uses the rolling development tag
+`registry.internal/tile-server/geodata-frontend:dev`. Rebuild it and restart
+the Deployment after a frontend change:
+
+```powershell
+docker build `
+  --build-arg NODE_IMAGE=node:24-alpine `
+  --build-arg NGINX_IMAGE=nginx:1.27-alpine `
+  -f fe/Dockerfile `
+  -t registry.internal/tile-server/geodata-frontend:dev .
+kubectl -n tile-server rollout restart deployment/geodata-frontend
+kubectl -n tile-server rollout status deployment/geodata-frontend
+```
+
+This remains air-gapped only when `node:24-alpine` and `nginx:1.27-alpine`
+are already loaded into Docker Desktop from the internal artifact store, for
+example with `docker load -i base-images.tar`. If either image is absent, do
+not allow Docker to pull it from the Internet; mirror or export it internally
+first.
+
+After the storage bootstrap has completed, apply the namespace and current frontend skeleton:
+
+```sh
+kubectl apply -k deployment
+```
+
+Bootstrap Ceph only after applying a real secret as described in [storage/README.md](storage/README.md).
+

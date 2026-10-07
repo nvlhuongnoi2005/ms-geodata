@@ -1,0 +1,6 @@
+:root { font-synthesis: none; }
+* { box-sizing: border-box; }
+html, body, #root { min-height: 100%; }
+body { min-width: 320px; }
+.maplibregl-ctrl-group { box-shadow: 0 2px 12px rgb(24 50 48 / 16%); }
+

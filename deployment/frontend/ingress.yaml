@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: geodata-frontend
+  namespace: tile-server
+  labels:
+    app.kubernetes.io/name: geodata-frontend
+    app.kubernetes.io/part-of: tile-server
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "16m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: geodata.localhost
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: geodata-frontend
+                port:
+                  name: http
+

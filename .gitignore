@@ -1,0 +1,8 @@
+node_modules/
+dist/
+fe/dist/
+.env
+.env.local
+*.tsbuildinfo
+deployment/storage/ceph-s3-credentials.yaml
+
