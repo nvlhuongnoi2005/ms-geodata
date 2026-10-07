@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useState, type FormEvent, type ReactNode } from "react";
 import {
   AppBar,
   Avatar,
@@ -13,6 +13,7 @@ import {
   ListItemIcon,
   ListItemText,
   Stack,
+  TextField,
   Toolbar,
   Typography
 } from "@mui/material";
@@ -47,15 +48,32 @@ const navigation: { key: PageKey; label: string; icon: ReactNode }[] = [
 ];
 
 function SessionGate({ children }: { children: ReactNode }) {
-  const { isLoading, user } = useAuth();
+  const { isLoading, login, user } = useAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const signIn = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setIsSubmitting(true);
+    setError(null);
+    const result = await login(email, password);
+    setIsSubmitting(false);
+    if (!result.ok) setError(result.message);
+  };
   if (isLoading) {
     return <Box sx={{ minHeight: "100dvh", display: "grid", placeItems: "center" }}><CircularProgress /></Box>;
   }
   if (!user) {
     return (
       <Box sx={{ minHeight: "100dvh", display: "grid", placeItems: "center", p: 3 }}>
-        <Stack spacing={2} sx={{ maxWidth: 460 }}>
+        <Stack component="form" onSubmit={(event) => void signIn(event)} spacing={2} sx={{ width: "100%", maxWidth: 460 }}>
           <Typography variant="h4">Geodata Control</Typography>
+          <TextField autoComplete="email" label="WebGIS email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} required autoFocus />
+          <TextField autoComplete="current-password" label="Password" type="password" value={password} onChange={(event) => setPassword(event.target.value)} required />
+          {error && <Typography color="error" variant="body2">{error}</Typography>}
+          <Button variant="contained" type="submit" disabled={isSubmitting}>{isSubmitting ? "Signing in…" : "Sign in with WebGIS"}</Button>
           <Typography color="text.secondary">Đăng nhập bằng tài khoản WebGIS admin để quản lý dữ liệu geodata.</Typography>
           <Button variant="contained" component="a" href={import.meta.env.VITE_MAP_LOGIN_URL || "http://localhost:8080/login"}>Mở trang đăng nhập WebGIS</Button>
         </Stack>

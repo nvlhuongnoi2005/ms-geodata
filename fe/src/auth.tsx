@@ -9,7 +9,13 @@ export type AuthUser = {
 };
 
 type TokenResponse = { access_token: string; user: AuthUser };
-type AuthContextValue = { user: AuthUser | null; isLoading: boolean; accessToken: string | null };
+type LoginResult = { ok: true } | { ok: false; message: string };
+type AuthContextValue = {
+  user: AuthUser | null;
+  isLoading: boolean;
+  accessToken: string | null;
+  login: (email: string, password: string) => Promise<LoginResult>;
+};
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
@@ -56,7 +62,31 @@ export function AuthProvider({ children }: PropsWithChildren) {
     void restore();
   }, []);
 
-  const value = useMemo(() => ({ user, isLoading, accessToken }), [accessToken, isLoading, user]);
+  const login = async (email: string, password: string): Promise<LoginResult> => {
+    try {
+      const response = await fetch("/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ email, password })
+      });
+      if (!response.ok) return { ok: false, message: "Email or password is incorrect." };
+
+      const payload = (await response.json()) as TokenResponse;
+      if (payload.user.role !== "admin") {
+        setAccessToken(null);
+        setUser(null);
+        return { ok: false, message: "This WebGIS account is not a Geodata administrator." };
+      }
+      setAccessToken(payload.access_token);
+      setUser(payload.user);
+      return { ok: true };
+    } catch {
+      return { ok: false, message: "Unable to connect to the WebGIS authentication service." };
+    }
+  };
+
+  const value = useMemo(() => ({ user, isLoading, accessToken, login }), [accessToken, isLoading, user]);
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 

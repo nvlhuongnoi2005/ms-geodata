@@ -13,6 +13,7 @@ export default defineConfig(({ mode }) => {
   return {
     root: frontendRoot,
     envDir: workspaceRoot,
+    base: env.VITE_PUBLIC_BASE_PATH || "/",
     plugins: [react()],
     optimizeDeps: { exclude: ["maplibre-gl"] },
     server: {

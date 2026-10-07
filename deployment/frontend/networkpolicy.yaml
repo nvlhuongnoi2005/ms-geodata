@@ -21,4 +21,26 @@ spec:
       ports:
         - protocol: TCP
           port: 8080
-  egress: []
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: webgis
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: controller
+      ports:
+        - protocol: TCP
+          port: 3001
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
