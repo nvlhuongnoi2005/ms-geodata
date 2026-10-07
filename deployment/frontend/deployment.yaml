@@ -17,10 +17,12 @@ spec:
         app.kubernetes.io/name: geodata-frontend
         app.kubernetes.io/part-of: tile-server
     spec:
+      imagePullSecrets:
+        - name: ghcr-pull
       containers:
         - name: frontend
-          image: registry.internal/tile-server/geodata-frontend:dev
-          imagePullPolicy: IfNotPresent
+          image: ghcr.io/nvlhuongnoi2005/tile-server/front-end:dev
+          imagePullPolicy: Always
           ports:
             - name: http
               containerPort: 8080

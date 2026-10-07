@@ -22,16 +22,18 @@ The application must not make Internet connections at runtime or deployment time
 
 ### Local Docker Desktop build
 
-The frontend Deployment uses the rolling development tag
-`registry.internal/tile-server/geodata-frontend:dev`. Rebuild it and restart
-the Deployment after a frontend change:
+The production frontend Deployment must use an image mirrored into the internal
+registry. For the current connected development cluster it uses the rolling
+tag `ghcr.io/nvlhuongnoi2005/tile-server:dev`; rebuild and restart after a
+frontend change:
 
 ```powershell
 docker build `
   --build-arg NODE_IMAGE=node:24-alpine `
   --build-arg NGINX_IMAGE=nginx:1.27-alpine `
   -f fe/Dockerfile `
-  -t registry.internal/tile-server/geodata-frontend:dev .
+  -t ghcr.io/nvlhuongnoi2005/tile-server:dev .
+docker push ghcr.io/nvlhuongnoi2005/tile-server:dev
 kubectl -n tile-server rollout restart deployment/geodata-frontend
 kubectl -n tile-server rollout status deployment/geodata-frontend
 ```
@@ -41,6 +43,11 @@ are already loaded into Docker Desktop from the internal artifact store, for
 example with `docker load -i base-images.tar`. If either image is absent, do
 not allow Docker to pull it from the Internet; mirror or export it internally
 first.
+
+On a local workstation that already has the prior frontend runtime image but
+does not have the Node/Nginx build bases, use `fe/Dockerfile.runtime` after
+`npm run build`. It layers the newly built static assets over the existing
+local runtime image without pulling a base image.
 
 After the storage bootstrap has completed, apply the namespace and current frontend skeleton:
 
