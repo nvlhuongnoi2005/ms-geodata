@@ -15,6 +15,7 @@ type AuthContextValue = {
   isLoading: boolean;
   accessToken: string | null;
   login: (email: string, password: string) => Promise<LoginResult>;
+  logout: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -86,7 +87,20 @@ export function AuthProvider({ children }: PropsWithChildren) {
     }
   };
 
-  const value = useMemo(() => ({ user, isLoading, accessToken, login }), [accessToken, isLoading, user]);
+  const logout = async () => {
+    const headers = new Headers({ "Content-Type": "application/json" });
+    const csrf = csrfToken();
+    if (csrf) headers.set("X-CSRF-Token", csrf);
+    if (accessToken) headers.set("Authorization", `Bearer ${accessToken}`);
+    try {
+      await fetch("/auth/logout", { method: "POST", headers, credentials: "include", body: "{}" });
+    } finally {
+      setAccessToken(null);
+      setUser(null);
+    }
+  };
+
+  const value = useMemo(() => ({ user, isLoading, accessToken, login, logout }), [accessToken, isLoading, user]);
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 

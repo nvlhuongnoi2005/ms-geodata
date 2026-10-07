@@ -30,6 +30,7 @@ import {
   Gauge,
   Layers3,
   LockKeyhole,
+  LogOut,
   Mail,
   MapPinned,
   Menu,
@@ -139,14 +140,15 @@ function SessionGate({ children }: { children: ReactNode }) {
 export function AdminShell() {
   const [activePage, setActivePage] = useState<PageKey>("overview");
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { user } = useAuth();
+  const { logout, user } = useAuth();
 
-  const drawer = <Box sx={{ height: "100%", display: "flex", flexDirection: "column", bgcolor: "#102128", color: "#eaf3f2" }}>
+  const drawer = <Box className="app-drawer" sx={{ height: "100%", display: "flex", flexDirection: "column", bgcolor: "#fff", color: "#15252b" }}>
     <Box sx={{ px: 2.25, pt: 2.5, pb: 2.25 }}><Stack direction="row" spacing={1.2} sx={{ alignItems: "center" }}><BrandMark size={38} /><Box><Typography sx={{ fontWeight: 800, letterSpacing: "-.02em" }}>Geodata Control</Typography><Typography variant="caption" sx={{ color: "rgb(225 244 241 / 58%)" }}>Tile platform · offline</Typography></Box></Stack></Box>
     <Divider sx={{ borderColor: "rgb(255 255 255 / 8%)" }} />
     <Typography variant="overline" sx={{ px: 2.4, pt: 2.5, pb: .8, color: "rgb(225 244 241 / 42%)", fontWeight: 800, letterSpacing: ".12em", fontSize: 10 }}>WORKSPACE</Typography>
     <List sx={{ px: 1.15, py: 0 }}>{navigation.map((item) => <ListItemButton key={item.key} selected={activePage === item.key} onClick={() => { setActivePage(item.key); setMobileOpen(false); }} sx={{ mb: .45, borderRadius: 2.5, py: 1.05, color: activePage === item.key ? "#fff" : "rgb(230 244 242 / 70%)", "&.Mui-selected": { bgcolor: "rgb(255 255 255 / 11%)" }, "&.Mui-selected:hover, &:hover": { bgcolor: "rgb(255 255 255 / 9%)" } }}><ListItemIcon sx={{ minWidth: 39, color: activePage === item.key ? "#ff728f" : "rgb(230 244 242 / 56%)" }}>{item.icon}</ListItemIcon><ListItemText primary={<Typography sx={{ fontWeight: 700, fontSize: 13.5 }}>{item.label}</Typography>} secondary={<Typography variant="caption" sx={{ color: "rgb(230 244 242 / 44%)", fontSize: 11 }}>{item.caption}</Typography>} /></ListItemButton>)}</List>
     <Box sx={{ mt: "auto", m: 1.25, p: 1.5, borderRadius: 3, bgcolor: "rgb(94 222 194 / 9%)", border: "1px solid rgb(94 222 194 / 12%)" }}><Stack direction="row" spacing={.8} sx={{ alignItems: "center" }}><Box className="status-pulse" sx={{ width: 7, height: 7, borderRadius: "50%", bgcolor: "#65e8d1" }} /><Typography variant="caption" sx={{ color: "#bff9ed", fontWeight: 800 }}>Hạ tầng sẵn sàng</Typography></Stack><Typography variant="caption" sx={{ mt: .7, display: "block", color: "rgb(225 244 241 / 57%)", lineHeight: 1.5 }}>S3 Ceph · pipeline nội bộ · Map Auth</Typography></Box>
+    <Box sx={{ px: 1.25, pb: 1.25 }}><Button fullWidth variant="outlined" color="inherit" startIcon={<LogOut size={17} />} onClick={() => void logout()}>Đăng xuất</Button></Box>
   </Box>;
 
   return <SessionGate><Box sx={{ display: "flex", minHeight: "100dvh", bgcolor: "background.default" }}>

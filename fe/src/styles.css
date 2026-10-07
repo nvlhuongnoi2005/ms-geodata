@@ -5,12 +5,12 @@ body { min-width: 320px; }
 .maplibregl-ctrl-group { box-shadow: 0 6px 20px rgb(23 40 44 / 14%); }
 
 .login-map-surface {
-  background-color: #0d2026;
+  background-color: #eef6f4;
   background-image:
-    linear-gradient(rgb(255 255 255 / 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(255 255 255 / 0.045) 1px, transparent 1px),
-    radial-gradient(circle at 80% 20%, rgb(33 147 132 / 28%), transparent 32%),
-    radial-gradient(circle at 12% 85%, rgb(223 23 67 / 26%), transparent 34%);
+    linear-gradient(rgb(18 68 61 / 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(18 68 61 / 0.06) 1px, transparent 1px),
+    radial-gradient(circle at 80% 20%, rgb(45 173 149 / 22%), transparent 32%),
+    radial-gradient(circle at 12% 85%, rgb(223 23 67 / 18%), transparent 34%);
   background-size: 34px 34px, 34px 34px, auto, auto;
 }
 
@@ -18,3 +18,13 @@ body { min-width: 320px; }
 @keyframes route-flow { to { stroke-dashoffset: -260; } }
 .status-pulse { animation: status-pulse 2.2s ease-in-out infinite; }
 @keyframes status-pulse { 50% { opacity: .5; transform: scale(.88); } }
+
+.app-drawer { border-right: 1px solid #e4ebea; }
+.app-drawer .MuiTypography-root { color: #20353a !important; }
+.app-drawer .MuiDivider-root { border-color: #e8eeee !important; }
+.app-drawer .MuiListItemButton-root { color: #5e7276 !important; }
+.app-drawer .MuiListItemButton-root .MuiListItemIcon-root { color: #84989a !important; }
+.app-drawer .MuiListItemButton-root.Mui-selected { background: #fff0f3 !important; color: #b90c36 !important; }
+.app-drawer .MuiListItemButton-root.Mui-selected .MuiListItemIcon-root { color: #d91440 !important; }
+.app-drawer .MuiListItemButton-root:hover { background: #f4f8f7 !important; }
+.app-drawer .MuiButton-root { border-color: #dce5e3 !important; color: #52666a !important; }
