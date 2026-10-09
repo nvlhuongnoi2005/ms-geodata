@@ -1,8 +1,20 @@
-:root { font-synthesis: none; }
-* { box-sizing: border-box; }
-html, body, #root { min-height: 100%; }
-body { min-width: 320px; }
-.maplibregl-ctrl-group { box-shadow: 0 6px 20px rgb(23 40 44 / 14%); }
+:root {
+  font-synthesis: none;
+}
+* {
+  box-sizing: border-box;
+}
+html,
+body,
+#root {
+  min-height: 100%;
+}
+body {
+  min-width: 320px;
+}
+.maplibregl-ctrl-group {
+  box-shadow: 0 6px 20px rgb(23 40 44 / 14%);
+}
 
 .login-map-surface {
   background-color: #eef6f4;
@@ -11,19 +23,56 @@ body { min-width: 320px; }
     linear-gradient(90deg, rgb(18 68 61 / 0.06) 1px, transparent 1px),
     radial-gradient(circle at 80% 20%, rgb(45 173 149 / 22%), transparent 32%),
     radial-gradient(circle at 12% 85%, rgb(223 23 67 / 18%), transparent 34%);
-  background-size: 34px 34px, 34px 34px, auto, auto;
+  background-size:
+    34px 34px,
+    34px 34px,
+    auto,
+    auto;
 }
 
-.login-route { stroke-dasharray: 7 11; animation: route-flow 18s linear infinite; }
-@keyframes route-flow { to { stroke-dashoffset: -260; } }
-.status-pulse { animation: status-pulse 2.2s ease-in-out infinite; }
-@keyframes status-pulse { 50% { opacity: .5; transform: scale(.88); } }
+.login-route {
+  stroke-dasharray: 7 11;
+  animation: route-flow 18s linear infinite;
+}
+@keyframes route-flow {
+  to {
+    stroke-dashoffset: -260;
+  }
+}
+.status-pulse {
+  animation: status-pulse 2.2s ease-in-out infinite;
+}
+@keyframes status-pulse {
+  50% {
+    opacity: 0.5;
+    transform: scale(0.88);
+  }
+}
 
-.app-drawer { border-right: 1px solid var(--drawer-border, #e4ebea); }
-.app-drawer .MuiListItemButton-root.Mui-selected { background: #fff0f3; color: #b90c36; }
-.app-drawer .MuiListItemButton-root.Mui-selected .MuiListItemIcon-root { color: #d91440; }
-.app-drawer .MuiListItemButton-root:hover { background: rgb(94 128 124 / 10%); }
+.app-drawer {
+  border-right: 1px solid var(--drawer-border, #e4ebea);
+}
+.app-drawer .MuiListItemButton-root.Mui-selected {
+  background: #fff0f3;
+  color: #b90c36;
+}
+.app-drawer .MuiListItemButton-root.Mui-selected .MuiListItemIcon-root {
+  color: #d91440;
+}
+.app-drawer .MuiListItemButton-root:hover {
+  background: rgb(94 128 124 / 10%);
+}
 
-html[data-color-mode="dark"] { --drawer-border: #304044; }
-html[data-color-mode="dark"] .app-drawer .MuiListItemButton-root.Mui-selected { background: #4b1d29; color: #ffb8c7; }
-html[data-color-mode="dark"] .app-drawer .MuiListItemButton-root.Mui-selected .MuiListItemIcon-root { color: #ff9aae; }
+html[data-color-mode="dark"] {
+  --drawer-border: #304044;
+}
+html[data-color-mode="dark"] .app-drawer .MuiListItemButton-root.Mui-selected {
+  background: #4b1d29;
+  color: #ffb8c7;
+}
+html[data-color-mode="dark"]
+  .app-drawer
+  .MuiListItemButton-root.Mui-selected
+  .MuiListItemIcon-root {
+  color: #ff9aae;
+}

@@ -1,4 +1,11 @@
-import { createContext, useContext, useEffect, useMemo, useState, type PropsWithChildren } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type PropsWithChildren,
+} from "react";
 
 export type AuthUser = {
   id: string;
@@ -36,7 +43,13 @@ export function AuthProvider({ children }: PropsWithChildren) {
     const restore = async () => {
       if (import.meta.env.VITE_GEODATA_DEMO === "true") {
         setAccessToken("demo-only-token");
-        setUser({ id: "demo-admin", name: "Geodata Admin", email: "admin@local", role: "admin", scopes: [] });
+        setUser({
+          id: "demo-admin",
+          name: "Geodata Admin",
+          email: "admin@local",
+          role: "admin",
+          scopes: [],
+        });
         setIsLoading(false);
         return;
       }
@@ -49,7 +62,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
           method: "POST",
           headers,
           credentials: "include",
-          body: "{}"
+          body: "{}",
         });
         if (response.ok) {
           const payload = (await response.json()) as TokenResponse;
@@ -69,7 +82,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password }),
       });
       if (!response.ok) return { ok: false, message: "Email or password is incorrect." };
 
@@ -100,7 +113,10 @@ export function AuthProvider({ children }: PropsWithChildren) {
     }
   };
 
-  const value = useMemo(() => ({ user, isLoading, accessToken, login, logout }), [accessToken, isLoading, user]);
+  const value = useMemo(
+    () => ({ user, isLoading, accessToken, login, logout }),
+    [accessToken, isLoading, user]
+  );
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
@@ -109,4 +125,3 @@ export function useAuth(): AuthContextValue {
   if (!value) throw new Error("useAuth must be used inside AuthProvider");
   return value;
 }
-

@@ -24,16 +24,16 @@ The application must not make Internet connections at runtime or deployment time
 
 The production frontend Deployment must use an image mirrored into the internal
 registry. For the current connected development cluster it uses the rolling
-tag `ghcr.io/nvlhuongnoi2005/tile-server:dev`; rebuild and restart after a
-frontend change:
+tag `ghcr.io/nvlhuongnoi2005/tile-server/front-end:dev`; rebuild and restart
+after a frontend change:
 
 ```powershell
 docker build `
   --build-arg NODE_IMAGE=node:24-alpine `
   --build-arg NGINX_IMAGE=nginx:1.27-alpine `
   -f fe/Dockerfile `
-  -t ghcr.io/nvlhuongnoi2005/tile-server:dev .
-docker push ghcr.io/nvlhuongnoi2005/tile-server:dev
+  -t ghcr.io/nvlhuongnoi2005/tile-server/front-end:dev .
+docker push ghcr.io/nvlhuongnoi2005/tile-server/front-end:dev
 kubectl -n tile-server rollout restart deployment/geodata-frontend
 kubectl -n tile-server rollout status deployment/geodata-frontend
 ```

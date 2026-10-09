@@ -7,9 +7,10 @@ export default function App() {
   return (
     <I18nProvider>
       <AppearanceProvider>
-        <AuthProvider><AdminShell /></AuthProvider>
+        <AuthProvider>
+          <AdminShell />
+        </AuthProvider>
       </AppearanceProvider>
     </I18nProvider>
   );
 }
-
